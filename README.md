@@ -7,6 +7,10 @@
 | Muhammad Dzaky Ahnaf  | 5027231039 |
 | Muhammad Nafi Firdaus | 5027231045 |
 
+## Topologi
+
+![image](https://github.com/user-attachments/assets/64ae068b-ce3b-4d44-9890-e42f7d4b2056)
+
 ## Definisi
 ### VLSM 
 VLSM (Variable Length Subnet Mask) adalah metode subnetting dalam jaringan komputer yang memungkinkan penggunaan subnet mask dengan panjang yang berbeda-beda untuk setiap subnet dalam suatu jaringan IP. VLSM dikenal sebagai metode subnetting yang efisien karena memaksimalkan alokasi alamat IP berdasarkan kebutuhan jumlah host dalam tiap subnet.
