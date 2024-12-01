@@ -204,11 +204,11 @@ iface eth0 inet static
 ## Routing 
 ### NewEridu (Router) = Untuk selain A1 dan A5 
 ```
-# Melewati A1: (A2-A4)
+# (A2-A4)
 post-up route add -net 10.70.0.0 netmask 255.255.255.0 gw 10.70.1.218
 post-up route add -net 10.70.1.192 netmask 255.255.255.248 gw 10.70.1.218
 post-up route add -net 10.70.1.0 netmask 255.255.255.128 gw 10.70.1.218
-# Melewati A5: (A6-A9)
+# (A6-A9)
 post-up route add -net 10.70.1.200 netmask 255.255.255.248 gw 10.70.1.222
 post-up route add -net 10.70.1.208 netmask 255.255.255.248 gw 10.70.1.222
 post-up route add -net 10.70.1.128 netmask 255.255.255.192 gw 10.70.1.222
