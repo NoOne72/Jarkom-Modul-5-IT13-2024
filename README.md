@@ -91,7 +91,7 @@ auto eth0
 iface eth0 inet static
 	address 10.70.1.195
 	netmask 255.255.255.248
-  gateway 10.70.1.193
+  	gateway 10.70.1.193
 ```
 ### BalletTwins (Router) = A3 & A4 
 ```
@@ -100,11 +100,11 @@ auto eth0
 iface eth0 inet static
 	address 10.70.1.194
 	netmask 255.255.255.248
-  gateway 10.70.1.193
+  	gateway 10.70.1.193
 #A4
 auto eth1
 iface eth1 inet static
-  address 10.70.1.1
+  	address 10.70.1.1
 	netmask 255.255.255.128
 ```
 ### Ellen (Client) = A4, Berjumlah 100 host 
