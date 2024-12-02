@@ -248,7 +248,7 @@ post-up route add -net 10.70.1.224 netmask 255.255.255.252 gw 10.70.1.211
 ```
 ### ScootOutpost (Router) = Selain A1 hingga A4, A7, A9
 ```
-# Pulang
+# Kembali
 post-up route add -net 0.0.0.0 netmask 0.0.0.0 gw 10.70.1.209
 # A8
 post-up route add -net 10.70.1.128 netmask 255.255.255.192 gw 10.70.1.210
