@@ -7,6 +7,7 @@
 | Muhammad Dzaky Ahnaf  | 5027231039 |
 | Muhammad Nafi Firdaus | 5027231045 |
 
+## Misi 1 
 ## Topologi
 
 ![image](https://github.com/user-attachments/assets/64ae068b-ce3b-4d44-9890-e42f7d4b2056)
@@ -218,3 +219,166 @@ post-up route add -net 10.70.1.208 netmask 255.255.255.248 gw 10.70.1.222
 post-up route add -net 10.70.1.128 netmask 255.255.255.192 gw 10.70.1.222
 post-up route add -net 10.70.1.224 netmask 255.255.255.252 gw 10.70.1.222
 ```
+### LuminaSquare (Router) = Untuk selain A1, A2, A3, A5 hingga A9 
+```
+# Kembali
+post-up route add -net 0.0.0.0 netmask 0.0.0.0 gw 10.70.1.217
+# A4
+post-up route add -net 10.70.1.0 netmask 255.255.255.128 gw 10.70.1.194
+```
+### BalletTwins (Router) = Untuk Selain A3, A4, A5 hingga A9
+```
+# Kembali (A1 & A2)
+post-up route add -net 0.0.0.0 netmask 0.0.0.0 gw 10.70.1.192
+```
+### SixStreet (Router) = Selain A1 hingga A4, A5, A6, A7
+```
+# Kembali
+post-up route add -net 0.0.0.0 netmask 0.0.0.0 gw 10.70.1.221
+# A8 dan A9
+post-up route add -net 10.70.1.128 netmask 255.255.255.192 gw 10.70.1.210
+post-up route add -net 10.70.1.224 netmask 255.255.255.252 gw 10.70.1.211
+```
+### OuterRing (Router) = Selain A1 hingga A4, A7, A8
+```
+# Kembali 
+post-up route add -net 0.0.0.0 netmask 0.0.0.0 gw 10.70.1.209
+# A9
+post-up route add -net 10.70.1.224 netmask 255.255.255.252 gw 10.70.1.211
+```
+### ScootOutpost (Router) = Selain A1 hingga A4, A7, A9
+```
+# Pulang
+post-up route add -net 0.0.0.0 netmask 0.0.0.0 gw 10.70.1.209
+# A8
+post-up route add -net 10.70.1.128 netmask 255.255.255.192 gw 10.70.1.210
+```
+## Konfigurasi 
+### DHCP Server = dhcpserver.sh 
+```
+echo 'nameserver 192.168.122.1' > /etc/resolv.conf
+apt-get update && apt-get install isc-dhcp-server -y
+
+echo '
+INTERFACESv4="eth0"
+INTERFACESv6=""
+' > /etc/default/isc-dhcp-server
+
+echo '
+# Jane & Policeboo (A2)
+subnet 10.70.0.0 netmask 255.255.255.0 {
+  range 10.70.0.2 10.70.0.254;
+  option routers 10.70.0.1;
+  option broadcast-address 10.70.0.255;
+  option domain-name-servers 10.70.1.203;
+}
+# Ellen & Lycaon (A4)
+subnet 10.70.1.0 netmask 255.255.255.128 {
+  range 10.70.1.2 10.70.1.126;
+  option routers 10.70.1.1;
+  option broadcast-address 10.70.1.127;
+  option domain-name-servers 10.70.1.203;
+}
+# Caesar & Burnice (A8)
+subnet 10.70.1.128 netmask 255.255.255.192 {
+  range 10.70.1.130 10.70.1.190;
+  option routers 10.70.1.129;
+  option broadcast-address 10.70.1.191;
+  option domain-name-servers 10.70.1.203;
+}
+# DHCP server
+subnet 10.70.1.200 netmask 255.255.255.248 {}
+' > /etc/dhcp/dhcpd.conf
+
+service isc-dhcp-server restart
+```
+### DHCP Relay = dhcprelay.sh 
+```
+echo 'nameserver 192.168.122.1' > /etc/resolv.conf
+apt-get update && apt-get install isc-dhcp-relay -y
+
+# IP Fairy: 10.70.1.202
+echo '
+SERVERS="10.70.1.202"
+INTERFACES="eth0 eth1 eth2 eth3"
+OPTIONS=""
+' > /etc/default/isc-dhcp-relay
+
+echo '
+net.ipv4.ip_forward=1
+' > /etc/sysctl.conf
+
+service isc-dhcp-relay restart
+```
+### DNS Server = dnsserver.sh 
+```
+echo 'nameserver 192.168.122.1' > /etc/resolv.conf
+apt-get update && apt-get install bind9 -y
+
+echo 'options {
+    directory "/var/cache/bind";
+
+    forwarders {
+        192.168.122.1;
+    };
+
+    // dnssec-validation auto;
+
+    allow-query { any; };
+    auth-nxdomain no;    # conform to RFC1035
+    listen-on-v6 { any; };
+};' > /etc/bind/named.conf.options
+
+service bind9 restart
+```
+### Web Server = webserver.sh 
+```
+echo 'nameserver 192.168.122.1' > /etc/resolv.conf
+apt-get update && apt-get install apache2 -y
+
+echo "Welcome to $(hostname)" > /var/www/html/index.html
+
+service apache2 restart
+```
+### Client (Install Dependensi) 
+```
+post-up apt-get update && apt-get install lynx netcat -y
+```
+
+## Misi 2 
+### Nomor 1
+iptables.sh pada NewEridu 
+```
+ETH0_IP=$(ip -4 addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source $ETH0_IP
+```
+### Nomor 2 
+iptables.sh pada fairy 
+```
+iptables -A INPUT -p icmp --icmp-type echo-request -j DROP # block pings TO fairy
+iptables -A OUTPUT -p icmp --icmp-type echo-request -j ACCEPT # allow pings FROM fairy
+```
+untuk mengembalikan seperti semula 
+```
+iptables -D INPUT -p icmp --icmp-type echo-request -j DROP
+iptables -D OUTPUT -p icmp --icmp-type echo-request -j ACCEPT
+```
+### Nomor 3 
+iptables.sh pada HDD 
+```
+iptables -A INPUT -s 10.74.1.202 -j ACCEPT # accept from fairy
+iptables -A INPUT -j REJECT # block all
+```
+Untuk melakukan pengecekan pada fairy bisa dengan `nc 10.74.1.203 1234` dan untuk pada HDD bisa dengan `nc -l -p 1234`
+### Nomor 4 
+iptables.sh pada HollowZero
+```
+iptables -A INPUT -p tcp -s <IP_Burnice> --dport 80 -m time --timestart 00:00 --timestop 23:59 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+iptables -A INPUT -p tcp -s <IP_Caesar> --dport 80 -m time --timestart 00:00 --timestop 23:59 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+iptables -A INPUT -p tcp -s <IP_Jane> --dport 80 -m time --timestart 00:00 --timestop 23:59 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+iptables -A INPUT -p tcp -s <IP_Policeboo> --dport 80 -m time --timestart 00:00 --timestop 23:59 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+iptables -A INPUT -p tcp --dport 80 -j REJECT
+```
+- IP Client merupakan IP Dinamis karena meminta pada DHCP sehingga diatas tidak dicantumkan
+- Untuk melakukan Pengecekan bisa dengan `curl http://10.74.1.226`
+
