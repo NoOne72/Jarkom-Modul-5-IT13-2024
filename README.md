@@ -16,6 +16,7 @@
 ### VLSM 
 VLSM (Variable Length Subnet Mask) adalah metode subnetting dalam jaringan komputer yang memungkinkan penggunaan subnet mask dengan panjang yang berbeda-beda untuk setiap subnet dalam suatu jaringan IP. VLSM dikenal sebagai metode subnetting yang efisien karena memaksimalkan alokasi alamat IP berdasarkan kebutuhan jumlah host dalam tiap subnet.
 
+
 ## Tabel Routing 
 | Nama Subnet          | Rute       | Jumlah IP       | Netmask      | 
 | -- | ---------- | ---------- | ---------- |
@@ -29,6 +30,10 @@ VLSM (Variable Length Subnet Mask) adalah metode subnetting dalam jaringan kompu
 | A8 | NewEridu -> SixStreet -> Metro -> OuterRing -> SoC -> Caesar -> SoC -> Burnice | 56 | /26 | 
 | A9  |NewEridu -> SixStreet -> Metro -> ScootOutpost -> HollowZero | 2 | /30 | 
 | Total |  | 423 | /23 | 
+
+## VLSM Tree
+
+![Vlsm_Tree](https://github.com/user-attachments/assets/8e6ced06-245b-4758-a014-2577713f472c)
 
 ## Pembagian IP 
 | Subnet | Network ID        | Netmask           | Broadcast      | Range IP                       |
